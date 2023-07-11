@@ -42,5 +42,8 @@ tracker.addWorkout(run);
 
 // Test Git Username
 
+// Test Email
+
+
 
 
