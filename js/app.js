@@ -7,6 +7,7 @@ class CalorieTracker {
             this.#displayCaloriesConsumed();
             this.#displayCaloriesBurned();
             this.#displayCaloriesRemaining();
+            this.#displayCaloriesProgress();
         }
 
         #calorieLimit = 2000; 
@@ -58,14 +59,34 @@ class CalorieTracker {
 
         #displayCaloriesRemaining(){
             const caloriesRemainingEl = document.getElementById('calories-remaining');
+            const progressEl = document.getElementById('calorie-progress');
 
             const remaining = this.#calorieLimit - this.#totalCalories;
 
-            caloriesRemainingEl.innerHTML = remaining;
+            caloriesRemainingEl.innerHTML = remaining
+            
+            if (remaining <= 0) {
+                caloriesRemainingEl.parentElement.parentElement.classList.remove('bg-light');
+                caloriesRemainingEl.parentElement.parentElement.classList.add('bg-danger');
+                progressEl.classList.remove('bg-success');
+                progressEl.classList.add('bg-danger');
+            } else {
+                caloriesRemainingEl.parentElement.parentElement.classList.add('bg-light');
+                caloriesRemainingEl.parentElement.parentElement.classList.remove('bg-danger');
+                progressEl.classList.add('bg-success');
+                progressEl.classList.remove('bg-danger');
+            }
         }
 
+        #displayCaloriesProgress(){
+            const progressEl = document.getElementById('calorie-progress');
+            const percentage = (this.#totalCalories / this.#calorieLimit)*100;
+            const width = Math.min(percentage,100);
+            progressEl.style.width = `${width}%`;
+        }
         // We have to do the rendering everytime we change the dom so we call this method //
         #render(){
+            this.#displayCaloriesProgress();
             this.#displayCaloriesTotal();
             this.#displayCaloriesConsumed();
             this.#displayCaloriesBurned();
@@ -94,9 +115,11 @@ const tracker = new CalorieTracker();
 
 const breakfast = new Meal('Breakfast', 400);
 const lunch = new Meal('Lunch', 350);
+const brunch = new Meal('Brunch', 350);
 
 tracker.addMeal(breakfast);
 tracker.addMeal(lunch);
+tracker.addMeal(brunch);
 const run = new Workout('Morning Run', 320);
 
 tracker.addWorkout(run);
