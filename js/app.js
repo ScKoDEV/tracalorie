@@ -111,18 +111,76 @@ class Workout {
     }
 }
 
-const tracker = new CalorieTracker();
+class App {
+    constructor(){
+    
+        document.getElementById('meal-form').addEventListener('submit', this.#newMeal.bind(this)); //we need to bind this so we dont lose our app context
+        document.getElementById('workout-form').addEventListener('submit', this.#newWorkout.bind(this));
+    }
 
-const breakfast = new Meal('Breakfast', 400);
-const lunch = new Meal('Lunch', 350);
-const brunch = new Meal('Brunch', 350);
+    #tracker = new CalorieTracker();
 
-tracker.addMeal(breakfast);
-tracker.addMeal(lunch);
-tracker.addMeal(brunch);
-const run = new Workout('Morning Run', 320);
+    #newMeal(e){
+        e.preventDefault();
 
-tracker.addWorkout(run);
+        const name = document.getElementById('meal-name');
+        const calories = document.getElementById('meal-calories');
+
+        // Validate Input
+        if (name.value === '' || calories.value === ''){
+            alert('Please fill in all fields!');
+            return;
+        } else if (name.value === 'Test' || name.value === 'test' ){
+            alert('Hier wird nichts getestet! Alles professionell erstellt!');
+            return;
+        }
+
+        const meal = new Meal(name.value, +calories.value); // calories need to be parsed to number -> add the +
+
+        this.#tracker.addMeal(meal);
+
+        name.value = '';
+        calories.value = '';
+
+        const collapseMeal = document.getElementById('collapse-meal');
+        const bsCollapse = new bootstrap.Collapse(collapseMeal, {
+            toggle: true
+        })
+
+    }
+
+    #newWorkout(e){
+        e.preventDefault();
+
+        const name = document.getElementById('workout-name');
+        const calories = document.getElementById('workout-calories');
+
+        // Validate Input
+        if (name.value === '' || calories.value === ''){
+            alert('Please fill in all fields!');
+            return;
+        } else if (name.value === 'Test' || name.value === 'test' ){
+            alert('Hier wird nichts getestet! Alles professionell erstellt!');
+            return;
+        }
+
+        const workout = new Workout(name.value, +calories.value); // calories need to be parsed to number -> add the +
+
+        this.#tracker.addWorkout(workout);
+
+        name.value = '';
+        calories.value = '';
+
+        const collapseWorkout = document.getElementById('collapse-workout');
+        const bsCollapse = new bootstrap.Collapse(collapseWorkout, {
+            toggle: true
+        })
+
+    }
+
+}
+
+const app = new App();
 
 
 
